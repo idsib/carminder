@@ -1,36 +1,42 @@
-import React from 'react';
+import { Build, DirectionsCar, GitHub, Schedule, Search } from '@mui/icons-material';
 import {
   AppBar,
-  Toolbar,
-  Typography,
-  Container,
-  Grid,
+  Box,
+  Button,
   Card,
   CardContent,
-  Button,
-  Box,
-  TextField,
+  Container,
+  Grid,
   InputAdornment,
-  useTheme,
+  TextField,
+  Toolbar,
+  Typography,
   useMediaQuery,
+  useTheme,
 } from '@mui/material';
-import { Search, DirectionsCar, Schedule, Build, GitHub } from '@mui/icons-material';
+import React from 'react';
+import { useTranslation } from 'react-i18next'; // importar el hook de traducción
 
 export default function CarTaskManager() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { t, i18n } = useTranslation(); // inicializar traducción
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng); // función para cambiar el idioma
+  };
 
   return (
     <Box sx={{ flexGrow: 1, bgcolor: 'background.default', minHeight: '100vh' }}>
       <AppBar position="static" color="transparent" elevation={0}>
         <Toolbar>
-          <img 
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/carminder-bZFEVGRBpyi8WS2AfdnDvVepJGPvuv.png" 
-            alt="CarMinder Logo" 
-            style={{ height: 40, marginRight: theme.spacing(2) }} 
+          <img
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/carminder-bZFEVGRBpyi8WS2AfdnDvVepJGPvuv.png"
+            alt="CarMinder Logo"
+            style={{ height: 40, marginRight: theme.spacing(2) }}
           />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            CarMinder
+            {t('appName')}
           </Typography>
           {!isMobile && (
             <>
@@ -39,8 +45,8 @@ export default function CarTaskManager() {
               <Button color="inherit">Docs</Button>
             </>
           )}
-          <Button 
-            color="inherit" 
+          <Button
+            color="inherit"
             startIcon={<GitHub />}
             href="https://github.com/carminder"
             target="_blank"
@@ -48,21 +54,27 @@ export default function CarTaskManager() {
           >
             {isMobile ? '' : 'GitHub'}
           </Button>
+          <Button onClick={() => changeLanguage('en')} color="inherit">
+            EN
+          </Button>
+          <Button onClick={() => changeLanguage('es')} color="inherit">
+            ES
+          </Button>
         </Toolbar>
       </AppBar>
 
       <Container maxWidth="lg" sx={{ mt: 8, mb: 4 }}>
         <Typography variant="h2" component="h1" align="center" gutterBottom fontWeight="bold">
-          Simplify Your Car Maintenance
+          {t('simplifyMaintenance')}
         </Typography>
         <Typography variant="h5" align="center" color="text.secondary" paragraph>
-          Manage tasks, track maintenance, and keep your fleet running smoothly with CarMinder.
+          {t('manageTasks')}
         </Typography>
 
         <Box sx={{ mt: 4, mb: 6, display: 'flex', justifyContent: 'center' }}>
           <TextField
             variant="outlined"
-            placeholder="Search tasks, vehicles, or maintenance logs"
+            placeholder={t('searchPlaceholder')}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -76,21 +88,24 @@ export default function CarTaskManager() {
 
         <Grid container spacing={4}>
           {[
-            { icon: <DirectionsCar />, title: 'Fleet Management', description: 'Easily manage all vehicles in your fleet from one central location.' },
-            { icon: <Schedule />, title: 'Task Scheduling', description: 'Plan and schedule maintenance tasks for each vehicle with ease.' },
-            { icon: <Build />, title: 'Maintenance Tracking', description: 'Keep a detailed record of all maintenance tasks performed on your vehicles.' },
+            { icon: <DirectionsCar />, title: t('fleetManagement'), description: t('fleetManagementDescription') },
+            { icon: <Schedule />, title: t('taskScheduling'), description: t('taskSchedulingDescription') },
+            { icon: <Build />, title: t('maintenanceTracking'), description: t('maintenanceTrackingDescription') },
           ].map((feature, index) => (
             <Grid item xs={12} md={4} key={index}>
-              <Card elevation={2} sx={{ height: '100%', display: 'flex', flexDirection: 'column', transition: '0.3s', '&:hover': { transform: 'translateY(-5px)' } }}>
+              <Card
+                elevation={2}
+                sx={{ height: '100%', display: 'flex', flexDirection: 'column', transition: '0.3s', '&:hover': { transform: 'translateY(-5px)' } }}
+              >
                 <CardContent>
-                  <Box 
-                    sx={{ 
-                      bgcolor: 'primary.main', 
-                      color: 'primary.contrastText', 
-                      borderRadius: '50%', 
-                      p: 2, 
+                  <Box
+                    sx={{
+                      bgcolor: 'primary.main',
+                      color: 'primary.contrastText',
+                      borderRadius: '50%',
+                      p: 2,
                       mb: 2,
-                      display: 'inline-flex'
+                      display: 'inline-flex',
                     }}
                   >
                     {React.cloneElement(feature.icon, { fontSize: 'large' })}
@@ -109,10 +124,10 @@ export default function CarTaskManager() {
 
         <Box sx={{ mt: 6, textAlign: 'center' }}>
           <Button variant="contained" color="primary" size="large" sx={{ mr: 2 }}>
-            Get Started
+            {t('getStarted')}
           </Button>
           <Button variant="outlined" color="primary" size="large">
-            View Documentation
+            {t('viewDocumentation')}
           </Button>
         </Box>
       </Container>

@@ -1,0 +1,13 @@
+{
+    "appName": "CarMinder",
+    "simplifyMaintenance": "Simplify Your Car Maintenance",
+    "manageTasks": "Manage tasks, track maintenance, and keep your fleet running smoothly with CarMinder.",
+    "fleetManagement": "Fleet Management",
+    "fleetManagementDescription": "Easily manage all vehicles in your fleet from one central location.",
+    "taskScheduling": "Task Scheduling",
+    "taskSchedulingDescription": "Plan and schedule maintenance tasks for each vehicle with ease.",
+    "maintenanceTracking": "Maintenance Tracking",
+    "maintenanceTrackingDescription": "Keep a detailed record of all maintenance tasks performed on your vehicles.",
+    "getStarted": "Get Started",
+    "viewDocumentation": "View Documentation"
+}

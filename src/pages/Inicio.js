@@ -1,4 +1,4 @@
-import { Build, DirectionsCar, GitHub, Schedule, Search } from '@mui/icons-material';
+import { DirectionsCar, GitHub, Schedule, Search } from '@mui/icons-material';
 import {
   AppBar,
   Box,
@@ -86,26 +86,35 @@ export default function CarTaskManager() {
           />
         </Box>
 
-        <Grid container spacing={4}>
+        <Grid container spacing={4} justifyContent="center">
           {[
             { icon: <DirectionsCar />, title: t('fleetManagement'), description: t('fleetManagementDescription') },
             { icon: <Schedule />, title: t('taskScheduling'), description: t('taskSchedulingDescription') },
-            { icon: <Build />, title: t('maintenanceTracking'), description: t('maintenanceTrackingDescription') },
           ].map((feature, index) => (
-            <Grid item xs={12} md={4} key={index}>
+            <Grid item xs={12} md={6} key={index} display="flex" justifyContent="center">
               <Card
                 elevation={2}
-                sx={{ height: '100%', display: 'flex', flexDirection: 'column', transition: '0.3s', '&:hover': { transform: 'translateY(-5px)' } }}
+                sx={{
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: '0.3s',
+                  '&:hover': { transform: 'translateY(-5px)' }
+                }}
               >
                 <CardContent>
                   <Box
                     sx={{
                       bgcolor: 'primary.main',
                       color: 'primary.contrastText',
-                      borderRadius: '50%',
                       p: 2,
                       mb: 2,
-                      display: 'inline-flex',
+                      display: 'inline-box',
+                      justifyContent: 'left',
+                      alignItems: 'left',
+                      padding: '0px',
+                      borderRadius: '100%',
+                      
                     }}
                   >
                     {React.cloneElement(feature.icon, { fontSize: 'large' })}

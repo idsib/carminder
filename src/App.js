@@ -3,7 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
 import './i18n';
 import Inicio from './pages/Inicio';
-import theme from './theme/theme'; // Asegúrate de que esta ruta sea correcta
+import theme from './theme/theme';
 
 function App() {
   return (

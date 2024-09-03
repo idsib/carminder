@@ -1,4 +1,4 @@
-import { DirectionsCar, GitHub, Menu, Schedule } from '@mui/icons-material';
+import { DirectionsCar, GitHub, Menu, Schedule, DarkMode, LightMode } from '@mui/icons-material';
 import {
   AppBar,
   Box,
@@ -14,8 +14,10 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  ThemeProvider,
+  createTheme,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,8 +40,9 @@ const MovingBackground = () => (
         bottom: '-100%',
         backgroundImage: 'url(https://hebbkx1anhila5yf.public.blob.vercel-storage.com/carminder-bZFEVGRBpyi8WS2AfdnDvVepJGPvuv.png)',
         backgroundSize: '80px 80px',
-        opacity: 0.05,
+        opacity: (theme) => theme.palette.mode === 'dark' ? 0.02 : 0.05,
         animation: 'move 5s linear infinite',
+        filter: (theme) => theme.palette.mode === 'dark' ? 'invert(1)' : 'none',
       },
       '@keyframes move': {
         '0%': { transform: 'translate(0, 0)' },
@@ -49,35 +52,62 @@ const MovingBackground = () => (
   />
 );
 
-const ShiningText = ({ children, ...props }) => (
-  <Typography
-    {...props}
-    sx={{
-      ...props.sx,
-      position: 'relative',
-      '&::after': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%)',
-        backgroundSize: '200% 100%',
-        animation: 'shine 10s linear infinite',
-      },
-      '@keyframes shine': {
-        '0%': { backgroundPosition: '200% 0' },
-        '100%': { backgroundPosition: '-200% 0' },
-      },
-    }}
-  >
-    {children}
-  </Typography>
-);
+const ShiningText = ({ children, ...props }) => {
+  const theme = useTheme();
+  return (
+    <Typography
+      {...props}
+      sx={{
+        ...props.sx,
+        position: 'relative',
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: theme.palette.mode === 'dark'
+            ? 'linear-gradient(45deg, transparent 0%, rgba(76, 175, 80, 0.1) 50%, transparent 100%)'
+            : 'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%)',
+          backgroundSize: '200% 100%',
+          animation: 'shine 10s linear infinite',
+        },
+        '@keyframes shine': {
+          '0%': { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
+        },
+      }}
+    >
+      {children}
+    </Typography>
+  );
+};
 
 export default function CarTaskManager() {
-  const theme = useTheme();
+  const [mode, setMode] = useState('light');
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+          primary: {
+            main: '#4caf50', // Mantenemos el color verde
+          },
+          ...(mode === 'dark' ? {
+            background: {
+              default: '#121212',
+              paper: '#1e1e1e',
+            },
+            text: {
+              primary: '#ffffff',
+              secondary: '#b0b0b0',
+            },
+          } : {}),
+        },
+      }),
+    [mode],
+  );
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { t, i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -99,16 +129,32 @@ export default function CarTaskManager() {
     navigate(route);
   };
 
+  const toggleColorMode = () => {
+    setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+  };
+
   return (
-    <>
-      <MovingBackground />
+    <ThemeProvider theme={theme}>
       <Box sx={{ 
         flexGrow: 1, 
         minHeight: '100vh',
         position: 'relative',
         zIndex: 1,
+        bgcolor: 'background.default',
+        color: 'text.primary',
       }}>
-        <AppBar position="fixed" color="transparent" elevation={0} sx={{ backdropFilter: 'blur(10px)' }}>
+        <MovingBackground />
+        <AppBar 
+          position="fixed" 
+          color="transparent" 
+          elevation={0} 
+          sx={{ 
+            backdropFilter: 'blur(10px)',
+            bgcolor: theme.palette.mode === 'dark' ? 'rgba(18, 18, 18, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+            transition: 'background-color 0.3s ease',
+            borderBottom: 'none', // Elimina cualquier borde que pueda causar la línea blanca
+          }}
+        >
           <Toolbar sx={{ justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <img
@@ -170,6 +216,9 @@ export default function CarTaskManager() {
                   </Button>
                 </>
               )}
+              <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
+                {theme.palette.mode === 'dark' ? <LightMode /> : <DarkMode />}
+              </IconButton>
               <Button 
                 variant="contained" 
                 color="primary"
@@ -185,13 +234,13 @@ export default function CarTaskManager() {
           </Toolbar>
         </AppBar>
 
-        <Container maxWidth="lg" sx={{ mt: { xs: 8, sm: 12 }, mb: 4 }}>
+        <Container maxWidth="lg" sx={{ mt: { xs: 8, sm: 12 }, mb: 4, pt: '64px' }}>
           <Box sx={{
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            backgroundColor: theme.palette.mode === 'dark' ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)',
             backdropFilter: 'blur(20px)',
             borderRadius: '20px',
             padding: { xs: '20px', sm: '40px' },
-            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+            boxShadow: `0 8px 32px 0 ${theme.palette.mode === 'dark' ? 'rgba(76, 175, 80, 0.37)' : 'rgba(76, 175, 80, 0.37)'}`,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -206,7 +255,7 @@ export default function CarTaskManager() {
                 marginBottom: { xs: 2, sm: 4 },
               }}
             />
-            <ShiningText variant="h2" component="h1" align="center" gutterBottom fontWeight="bold" sx={{ color: 'primary.main', fontSize: { xs: '2rem', sm: '3rem', md: '3.75rem' }, textShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
+            <ShiningText variant="h2" component="h1" align="center" gutterBottom fontWeight="bold" sx={{ color: 'primary.main', fontSize: { xs: '2rem', sm: '3rem', md: '3.75rem' }, textShadow: theme.palette.mode === 'dark' ? '0 0 10px rgba(76, 175, 80, 0.1)' : '0 0 10px rgba(0,0,0,0.1)' }}>
               {t('simplifyMaintenance')}
             </ShiningText>
             <Typography variant="h5" align="center" color="text.secondary" paragraph sx={{ fontSize: { xs: '1rem', sm: '1.5rem' } }}>
@@ -231,11 +280,12 @@ export default function CarTaskManager() {
                         boxShadow: '0 12px 20px rgba(0,0,0,0.1)',
                         cursor: 'pointer',
                       },
-                      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                      backgroundColor: theme.palette.mode === 'dark' ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)',
                       backdropFilter: 'blur(10px)',
                       borderRadius: '20px',
                       overflow: 'hidden',
                       position: 'relative',
+                      color: 'text.primary',
                     }}
                     onClick={() => handleCardClick(feature.route)}
                   >
@@ -303,7 +353,10 @@ export default function CarTaskManager() {
                   mr: 2, 
                   borderRadius: '50px', 
                   padding: '10px 30px',
-                  boxShadow: '0 4px 14px 0 rgba(0,118,255,0.39)'
+                  boxShadow: '0 4px 14px 0 rgba(76, 175, 80, 0.39)',
+                  '&:hover': {
+                    boxShadow: '0 6px 20px 0 rgba(76, 175, 80, 0.5)',
+                  }
                 }}
               >
                 {t('getStarted')}
@@ -323,6 +376,6 @@ export default function CarTaskManager() {
           </Box>
         </Container>
       </Box>
-    </>
+    </ThemeProvider>
   );
 }

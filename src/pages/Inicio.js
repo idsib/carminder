@@ -1,4 +1,4 @@
-import { DirectionsCar, GitHub, Menu, Schedule, DarkMode, LightMode } from '@mui/icons-material';
+import { DirectionsCar, GitHub, Menu, Schedule, DarkMode, LightMode, Language } from '@mui/icons-material';
 import {
   AppBar,
   Box,
@@ -17,9 +17,9 @@ import {
   ThemeProvider,
   createTheme,
 } from '@mui/material';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import Footer from '../components/Footer';
 
 const MovingBackground = () => (
@@ -81,7 +81,7 @@ const ShiningText = ({ children, ...props }) => {
 };
 
 export default function CarTaskManager() {
-  const [mode, setMode] = useState('light');
+  const [mode, setMode] = useState(() => localStorage.getItem('colorMode') || 'light');
   const theme = useMemo(
     () =>
       createTheme({
@@ -108,9 +108,24 @@ export default function CarTaskManager() {
   const { t, i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
+  const [redirectToSignUp, setRedirectToSignUp] = useState(false);
+  const [anchorElLang, setAnchorElLang] = useState(null);
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) {
+      i18n.changeLanguage(savedLanguage);
+    }
+  }, [i18n]);
+
+  if (redirectToSignUp) {
+    return <Navigate to="/sign-up" replace />;
+  }
+
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('language', lang);
+    handleLanguageMenuClose();
   };
 
   const handleMenu = (event) => {
@@ -126,7 +141,21 @@ export default function CarTaskManager() {
   };
 
   const toggleColorMode = () => {
-    setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+    const newMode = mode === 'light' ? 'dark' : 'light';
+    setMode(newMode);
+    localStorage.setItem('colorMode', newMode);
+  };
+
+  const handleSignup = () => {
+    setRedirectToSignUp(true);
+  };
+
+  const handleLanguageMenuOpen = (event) => {
+    setAnchorElLang(event.currentTarget);
+  };
+
+  const handleLanguageMenuClose = () => {
+    setAnchorElLang(null);
   };
 
   return (
@@ -215,12 +244,17 @@ export default function CarTaskManager() {
                   >
                     GitHub
                   </Button>
-                  <Button onClick={() => changeLanguage('en')} color="inherit">
-                    EN
-                  </Button>
-                  <Button onClick={() => changeLanguage('es')} color="inherit">
-                    ES
-                  </Button>
+                  <IconButton onClick={handleLanguageMenuOpen} color="inherit">
+                    <Language />
+                  </IconButton>
+                  <MuiMenu
+                    anchorEl={anchorElLang}
+                    open={Boolean(anchorElLang)}
+                    onClose={handleLanguageMenuClose}
+                  >
+                    <MenuItem onClick={() => changeLanguage('es')}>{t('ES')}</MenuItem>
+                    <MenuItem onClick={() => changeLanguage('en')}>{t('EN')}</MenuItem>
+                  </MuiMenu>
                 </>
               )}
               <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
@@ -229,6 +263,7 @@ export default function CarTaskManager() {
               <Button 
                 variant="contained" 
                 color="primary"
+                onClick={handleSignup}
                 sx={{ 
                   ml: 2,
                   borderRadius: '20px',

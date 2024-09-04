@@ -16,5 +16,17 @@
         "openSource": "Código Abierto",
         "features": "Características",
         "docs": "Documentación"
-    }
+    },
+    "signIn": "Iniciar sesión",
+    "signInWith": "Iniciar sesión con",
+    "orUsePassword": "O usar una contraseña",
+    "emailOrUsername": "Correo electrónico o nombre de usuario",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "createAccount": "Crear una cuenta",
+    "spanish": "Español",
+    "english": "Inglés",
+    "darkMode": "Modo oscuro",
+    "lightMode": "Modo claro",
+    "usingPassword": "Usar contraseña"
 }

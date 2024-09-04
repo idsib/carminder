@@ -11,10 +11,22 @@
     "getStarted": "Get Started",
     "viewDocumentation": "View Documentation",
     "signUp": "Sign Up",
+    "signIn": "Sign In",
+    "signInWith": "Sign in with",
+    "orUsePassword": "Or use a password",
+    "emailOrUsername": "Email or username",
+    "password": "Password",
+    "forgotPassword": "Forgot your password?",
+    "createAccount": "Create an account",
     "footer": {
         "createdBy": "Created by",
         "openSource": "Open Source",
         "features": "Features",
         "docs": "Docs"
-    }
+    },
+    "spanish": "Spanish",
+    "english": "English",
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode",
+    "usingPassword": "Using Password"
 }

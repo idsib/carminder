@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -17,42 +18,16 @@ import {
   MenuItem,
   ThemeProvider,
   createTheme,
+  CssBaseline,
 } from '@mui/material';
 import { GitHub, Google, DarkMode, LightMode, Language } from '@mui/icons-material';
 import MicrosoftIcon from '@mui/icons-material/Window';
 import { useTranslation } from 'react-i18next';
 import Footer from '../components/Footer';
+import LoadingPage from '../components/LoadingPage';
 
-const InteractiveBackground = () => (
-  <Box
-    sx={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: -1,
-      overflow: 'hidden',
-      '&::before, &::after': {
-        content: '""',
-        position: 'absolute',
-        top: '-50%',
-        left: '-50%',
-        width: '200%',
-        height: '200%',
-        background: 'radial-gradient(circle, rgba(76,175,80,0.2) 0%, rgba(76,175,80,0) 70%)',
-        animation: 'rotate 20s linear infinite',
-      },
-      '&::after': {
-        animationDelay: '-10s',
-      },
-      '@keyframes rotate': {
-        '0%': { transform: 'rotate(0deg)' },
-        '100%': { transform: 'rotate(360deg)' },
-      },
-    }}
-  />
-);
+// Importar la fuente Inter
+import '@fontsource/inter';
 
 const AnimatedLogo = () => (
   <Box
@@ -63,20 +38,30 @@ const AnimatedLogo = () => (
       right: 0,
       bottom: 0,
       zIndex: -1,
-      opacity: 0.05,
-      backgroundImage: 'url("/carminder.png")',
-      backgroundSize: '200px',
-      backgroundRepeat: 'repeat',
-      animation: 'float 20s linear infinite',
-      '@keyframes float': {
-        '0%': { backgroundPosition: '0 0' },
-        '100%': { backgroundPosition: '200px 200px' },
+      overflow: 'hidden',
+      '&::before': {
+        content: '""',
+        position: 'absolute',
+        top: '-100%',
+        left: '-100%',
+        right: '-100%',
+        bottom: '-100%',
+        backgroundImage: 'url("/carminder.png")',
+        backgroundSize: '200px 200px',
+        opacity: (theme) => theme.palette.mode === 'dark' ? 0.02 : 0.05,
+        animation: 'move 5s linear infinite',
+        filter: (theme) => theme.palette.mode === 'dark' ? 'invert(1)' : 'none',
+      },
+      '@keyframes move': {
+        '0%': { transform: 'translate(0, 0)' },
+        '100%': { transform: 'translate(200px, 200px)' },
       },
     }}
   />
 );
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [mode, setMode] = useState(() => localStorage.getItem('colorMode') || 'light');
   const theme = useMemo(
     () =>
@@ -97,6 +82,9 @@ const SignUp = () => {
             },
           } : {}),
         },
+        typography: {
+          fontFamily: 'Inter, Arial, sans-serif',
+        },
       }),
     [mode],
   );
@@ -105,6 +93,7 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language');
@@ -138,6 +127,15 @@ const SignUp = () => {
     handleLanguageMenuClose();
   };
 
+  const handleLogoClick = () => {
+    setIsLoading(true);
+    const logo = document.querySelector('#carminder-logo');
+    logo.style.animation = 'rotate 0.3s linear';
+    setTimeout(() => {
+      navigate('/');
+    }, 1000); // Aumentado a 1 segundo para mostrar la página de carga
+  };
+
   const socialButtons = [
     { icon: 'D', name: 'Discord', color: '#7289DA' },
     { icon: <GitHub />, name: 'GitHub', color: theme.palette.mode === 'dark' ? '#ffffff' : '#333' },
@@ -145,19 +143,22 @@ const SignUp = () => {
     { icon: <Google />, name: 'Google', color: '#DB4437' },
   ];
 
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Box
         sx={{
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
-          bgcolor: 'background.default',
-          color: 'text.primary',
           position: 'relative',
+          bgcolor: 'transparent',
         }}
       >
-        <InteractiveBackground />
         <AnimatedLogo />
         <AppBar 
           position="static" 
@@ -181,7 +182,20 @@ const SignUp = () => {
         >
           <Toolbar>
             <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-              <img src="/carminder.png" alt="CarMinder Logo" style={{ height: '40px', marginRight: '10px' }} />
+              <img 
+                id="carminder-logo"
+                src="/carminder.png" 
+                alt="CarMinder Logo" 
+                style={{ 
+                  height: '40px', 
+                  marginRight: '10px', 
+                  cursor: 'pointer',
+                  transition: 'transform 0.3s ease-in-out',
+                }} 
+                onClick={handleLogoClick}
+                onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
+                onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+              />
               <Typography variant="h6" component="div">
                 
               </Typography>
@@ -287,7 +301,7 @@ const SignUp = () => {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link component={RouterLink} to="/register" variant="body2">
                     {t('createAccount')}
                   </Link>
                 </Grid>
@@ -297,6 +311,8 @@ const SignUp = () => {
         </Container>
         
         <Footer />
+        
+        {isLoading && <LoadingPage />}
       </Box>
     </ThemeProvider>
   );

@@ -1,17 +1,30 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom'; // Import BrowserRouter, Routes, and Route
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './i18n';
 import HistorialTareas from './pages/HistorialTareas';
 import Inicio from './pages/Inicio';
 import TareasActivas from './pages/TareasActivas';
 import SignUp from './pages/SignUp';
 import theme from './theme/theme';
+// Importa la fuente Inter
+import '@fontsource/inter';
+// Importa createTheme para modificar el tema
+import { createTheme } from '@mui/material/styles';
+
+// Modifica el tema para usar Inter como fuente principal
+const interTheme = createTheme({
+  ...theme,
+  typography: {
+    ...theme.typography,
+    fontFamily: 'Inter, sans-serif',
+  },
+});
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={interTheme}>
       <CssBaseline />
       <BrowserRouter>
         <Routes>
@@ -19,7 +32,6 @@ function App() {
           <Route path="/historial-tareas" element={<HistorialTareas />} />
           <Route path="/tareas-activas" element={<TareasActivas />} />
           <Route path="/sign-up" element={<SignUp />} />
-
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

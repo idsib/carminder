@@ -2,11 +2,13 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Box, Container, Grid, Link, Typography, Button } from '@mui/material';
 import { styled } from '@mui/system';
+// Importamos la fuente Inter
+import '@fontsource/inter';
 
 const StyledFooter = styled('footer')(({ theme }) => ({
   backgroundColor: 'transparent',
   padding: theme.spacing(2, 0),
-  fontFamily: 'Arial, sans-serif',
+  fontFamily: '"Inter", Arial, sans-serif',
   position: 'relative',
   '&::before': {
     content: '""',
@@ -125,7 +127,7 @@ const Footer = () => {
                 justifyContent: 'center', 
                 width: { xs: '100%', sm: 'auto' } 
               }}>
-                <ModernButton variant="contained" size="small" component={Link} href="https://github.com/yourusername/yourrepo" target="_blank" rel="noopener noreferrer">
+                <ModernButton variant="contained" size="small" component={Link} href="https://github.com/idsib/carminder" target="_blank" rel="noopener noreferrer">
                   {t('footer.openSource')}
                 </ModernButton>
                 <ModernButton variant="contained" size="small" component={Link} href="/features">

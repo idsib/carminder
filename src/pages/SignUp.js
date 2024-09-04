@@ -144,7 +144,7 @@ const SignUp = () => {
   ];
 
   if (isLoading) {
-    return <LoadingPage />;
+    return <LoadingPage mode={mode} />;
   }
 
   return (

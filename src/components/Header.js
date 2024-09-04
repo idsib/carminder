@@ -149,6 +149,7 @@ function Header({ mode, toggleColorMode }) {
                 >
                   <MenuItem onClick={() => handleCardClick('/tareas-activas')}>{t('fleetManagement')}</MenuItem>
                   <MenuItem onClick={() => handleCardClick('/historial-tareas')}>{t('taskScheduling')}</MenuItem>
+                  <MenuItem onClick={() => handleCardClick('/documentation')}>{t('documentation')}</MenuItem>
                   <MenuItem onClick={() => changeLanguage('en')}>EN</MenuItem>
                   <MenuItem onClick={() => changeLanguage('es')}>ES</MenuItem>
                 </MuiMenu>
@@ -157,6 +158,7 @@ function Header({ mode, toggleColorMode }) {
               <>
                 <Button color="inherit" component={RouterLink} to="/tareas-activas">{t('fleetManagement')}</Button>
                 <Button color="inherit" component={RouterLink} to="/historial-tareas">{t('taskScheduling')}</Button>
+                <Button color="inherit" component={RouterLink} to="/docs">{t('documentation')}</Button>
                 <Button
                   color="inherit"
                   startIcon={<GitHub />}

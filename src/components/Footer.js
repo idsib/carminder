@@ -133,7 +133,7 @@ const Footer = () => {
                 <ModernButton variant="contained" size="small" component={Link} href="/features">
                   {t('footer.features')}
                 </ModernButton>
-                <ModernButton variant="contained" size="small" component={Link} href="/docs">
+                <ModernButton variant="contained" size="small" component={Link} href="/documentation">
                   {t('footer.docs')}
                 </ModernButton>
               </Box>

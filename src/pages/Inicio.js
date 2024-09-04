@@ -42,7 +42,7 @@ const MovingBackground = () => (
         backgroundImage: 'url(https://hebbkx1anhila5yf.public.blob.vercel-storage.com/carminder-bZFEVGRBpyi8WS2AfdnDvVepJGPvuv.png)',
         backgroundSize: '80px 80px',
         opacity: (theme) => theme.palette.mode === 'dark' ? 0.02 : 0.05,
-        animation: 'move 5s linear infinite',
+        animation: 'move 10s linear infinite',
         filter: (theme) => theme.palette.mode === 'dark' ? 'invert(1)' : 'none',
       },
       '@keyframes move': {
@@ -158,6 +158,15 @@ export default function CarTaskManager() {
     setAnchorElLang(null);
   };
 
+  const handleViewDocumentation = () => {
+    navigate('/documentation');
+  };
+
+  const handleDocsClick = () => {
+    navigate('/documentation');
+    handleClose(); 
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ 
@@ -225,16 +234,25 @@ export default function CarTaskManager() {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                   >
-                    <MenuItem onClick={handleClose}>Features</MenuItem>
-                    <MenuItem onClick={handleClose}>Docs</MenuItem>
-                    <MenuItem onClick={() => changeLanguage('en')}>EN</MenuItem>
-                    <MenuItem onClick={() => changeLanguage('es')}>ES</MenuItem>
+                    <MenuItem onClick={() => { handleClose(); navigate('/'); }}>{t('Features')}</MenuItem>
+                    <MenuItem onClick={handleDocsClick}>{t('Docs')}</MenuItem>
+                  </MuiMenu>
+                  <IconButton onClick={handleLanguageMenuOpen} color="inherit">
+                    <Language />
+                  </IconButton>
+                  <MuiMenu
+                    anchorEl={anchorElLang}
+                    open={Boolean(anchorElLang)}
+                    onClose={handleLanguageMenuClose}
+                  >
+                    <MenuItem onClick={() => changeLanguage('es')}>{t('ES')}</MenuItem>
+                    <MenuItem onClick={() => changeLanguage('en')}>{t('EN')}</MenuItem>
                   </MuiMenu>
                 </>
               ) : (
                 <>
-                  <Button color="inherit">Features</Button>
-                  <Button color="inherit">Docs</Button>
+                  <Button color="inherit" onClick={() => navigate('/')}>{t('Features')}</Button>
+                  <Button color="inherit" onClick={handleDocsClick}>{t('Docs')}</Button>
                   <Button
                     color="inherit"
                     startIcon={<GitHub />}
@@ -426,6 +444,7 @@ export default function CarTaskManager() {
                 variant="outlined" 
                 color="primary" 
                 size="large"
+                onClick={handleViewDocumentation}
                 sx={{ 
                   borderRadius: '50px', 
                   padding: '10px 30px',

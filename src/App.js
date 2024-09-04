@@ -8,6 +8,7 @@ import Inicio from './pages/Inicio';
 import TareasActivas from './pages/TareasActivas';
 import SignUp from './pages/SignUp';
 import Register from './pages/Register';
+import Docs from './pages/Docs';
 import theme from './theme/theme';
 import ForgotPassword from './pages/ForgotPassword';
 
@@ -37,6 +38,7 @@ function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/documentation" element={<Docs />} />
 
         </Routes>
       </BrowserRouter>

@@ -334,7 +334,7 @@ const Register = () => {
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link component={RouterLink} to="/sign-up" variant="body2">
+                  <Link component={RouterLink} to="/sign-in" variant="body2">
                     {t('alreadyHaveAccount')}
                   </Link>
                 </Grid>

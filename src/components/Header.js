@@ -81,7 +81,7 @@ function Header({ mode, toggleColorMode }) {
   };
 
   const handleSignup = () => {
-    navigate('/sign-up');
+    navigate('/sign-in');
   };
 
   const handleCardClick = (route) => {

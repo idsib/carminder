@@ -76,7 +76,7 @@ const MicrosoftIconCustom = (props) => (
   </SvgIcon>
 );
 
-const SignUp = () => {
+const SignIn = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState(() => localStorage.getItem('colorMode') || 'light');
   const theme = useMemo(
@@ -334,4 +334,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;

@@ -1,4 +1,4 @@
-import { DirectionsCar, GitHub, Menu, Schedule, DarkMode, LightMode, Language } from '@mui/icons-material';
+import { DirectionsCar, GitHub, Menu, Schedule, DarkMode, LightMode, Language, Login } from '@mui/icons-material';
 import {
   AppBar,
   Box,
@@ -88,7 +88,7 @@ export default function CarTaskManager() {
         palette: {
           mode,
           primary: {
-            main: '#4caf50', // Mantenemos el color verde
+            main: '#4caf50',
           },
           ...(mode === 'dark' ? {
             background: {
@@ -119,7 +119,7 @@ export default function CarTaskManager() {
   }, [i18n]);
 
   if (redirectToSignUp) {
-    return <Navigate to="/sign-up" replace />;
+    return <Navigate to="/sign-in" replace />;
   }
 
   const changeLanguage = (lang) => {
@@ -282,13 +282,14 @@ export default function CarTaskManager() {
                 variant="contained" 
                 color="primary"
                 onClick={handleSignup}
+                startIcon={<Login />}
                 sx={{ 
                   ml: 2,
                   borderRadius: '20px',
                   textTransform: 'none',
                 }}
               >
-                {t('SIGN UP')}
+                {t('SIGN IN')}
               </Button>
             </Box>
           </Toolbar>

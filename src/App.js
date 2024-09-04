@@ -6,7 +6,7 @@ import './i18n';
 import HistorialTareas from './pages/HistorialTareas';
 import Inicio from './pages/Inicio';
 import TareasActivas from './pages/TareasActivas';
-import SignUp from './pages/SignUp';
+import SignIn from './pages/SignIn';
 import Register from './pages/Register';
 import Docs from './pages/Docs';
 import theme from './theme/theme';
@@ -35,7 +35,7 @@ function App() {
           <Route path="/" element={<Inicio />} /> {/* Set Inicio as the default route */}
           <Route path="/historial-tareas" element={<HistorialTareas />} />
           <Route path="/tareas-activas" element={<TareasActivas />} />
-          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/sign-in" element={<SignIn />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/documentation" element={<Docs />} />

@@ -257,7 +257,7 @@ const ForgotPassword = () => {
               </Button>
               <Grid container justifyContent="center">
                 <Grid item>
-                  <Link component={RouterLink} to="/sign-up" variant="body2">
+                  <Link component={RouterLink} to="/sign-in" variant="body2">
                     {t('backToLogin')}
                   </Link>
                 </Grid>

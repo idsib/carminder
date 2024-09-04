@@ -60,22 +60,17 @@ const ShiningText = ({ children, ...props }) => {
       sx={{
         ...props.sx,
         position: 'relative',
-        '&::after': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: theme.palette.mode === 'dark'
-            ? 'linear-gradient(45deg, transparent 0%, rgba(76, 175, 80, 0.1) 50%, transparent 100%)'
-            : 'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%)',
-          backgroundSize: '200% 100%',
-          animation: 'shine 10s linear infinite',
-        },
+        background: theme.palette.mode === 'dark'
+          ? `linear-gradient(45deg, ${theme.palette.primary.main} 0%, #ffffff 50%, ${theme.palette.primary.main} 100%)`
+          : `linear-gradient(45deg, ${theme.palette.primary.main} 0%, #ffffff 50%, ${theme.palette.primary.main} 100%)`,
+        backgroundSize: '200% auto',
+        color: 'transparent',
+        WebkitBackgroundClip: 'text',
+        backgroundClip: 'text',
+        animation: 'shine 5s linear infinite',
         '@keyframes shine': {
-          '0%': { backgroundPosition: '200% 0' },
-          '100%': { backgroundPosition: '-200% 0' },
+          '0%': { backgroundPosition: '0% center' },
+          '100%': { backgroundPosition: '200% center' },
         },
       }}
     >
@@ -142,17 +137,28 @@ export default function CarTaskManager() {
         zIndex: 1,
         bgcolor: 'background.default',
         color: 'text.primary',
+        display: 'flex',
+        flexDirection: 'column',
       }}>
         <MovingBackground />
         <AppBar 
           position="fixed" 
-          color="transparent" 
-          elevation={0} 
           sx={{ 
             backdropFilter: 'blur(10px)',
-            bgcolor: theme.palette.mode === 'dark' ? 'rgba(18, 18, 18, 0.8)' : 'rgba(255, 255, 255, 0.8)',
-            transition: 'background-color 0.3s ease',
-            borderBottom: 'none', // Elimina cualquier borde que pueda causar la línea blanca
+            background: 'transparent',
+            boxShadow: 'none',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              bgcolor: theme.palette.mode === 'dark' 
+                ? 'rgba(18, 18, 18, 0.8)' 
+                : 'rgba(255, 255, 255, 0.8)',
+              zIndex: -1,
+            },
           }}
         >
           <Toolbar sx={{ justifyContent: 'space-between' }}>
@@ -202,7 +208,7 @@ export default function CarTaskManager() {
                   <Button
                     color="inherit"
                     startIcon={<GitHub />}
-                    href="https://github.com/carminder"
+                    href="https://github.com/idsib/carminder"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -234,7 +240,15 @@ export default function CarTaskManager() {
           </Toolbar>
         </AppBar>
 
-        <Container maxWidth="lg" sx={{ mt: { xs: 8, sm: 12 }, mb: 4, pt: '64px' }}>
+        <Container maxWidth="lg" sx={{ 
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          mt: 0,
+          pt: '64px', // Altura del AppBar
+          pb: 4,
+        }}>
           <Box sx={{
             backgroundColor: theme.palette.mode === 'dark' ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)',
             backdropFilter: 'blur(20px)',
@@ -255,7 +269,10 @@ export default function CarTaskManager() {
                 marginBottom: { xs: 2, sm: 4 },
               }}
             />
-            <ShiningText variant="h2" component="h1" align="center" gutterBottom fontWeight="bold" sx={{ color: 'primary.main', fontSize: { xs: '2rem', sm: '3rem', md: '3.75rem' }, textShadow: theme.palette.mode === 'dark' ? '0 0 10px rgba(76, 175, 80, 0.1)' : '0 0 10px rgba(0,0,0,0.1)' }}>
+            <ShiningText variant="h2" component="h1" align="center" gutterBottom fontWeight="bold" sx={{ 
+              fontSize: { xs: '2rem', sm: '3rem', md: '3.75rem' },
+              textShadow: theme.palette.mode === 'dark' ? '0 0 10px rgba(76, 175, 80, 0.3)' : '0 0 10px rgba(0,0,0,0.1)'
+            }}>
               {t('simplifyMaintenance')}
             </ShiningText>
             <Typography variant="h5" align="center" color="text.secondary" paragraph sx={{ fontSize: { xs: '1rem', sm: '1.5rem' } }}>

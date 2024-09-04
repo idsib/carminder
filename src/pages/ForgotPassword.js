@@ -9,7 +9,6 @@ import {
   Typography,
   Container,
   Grid,
-  Divider,
   Link,
   IconButton,
   useMediaQuery,
@@ -20,12 +19,10 @@ import {
   createTheme,
   CssBaseline,
 } from '@mui/material';
-import { GitHub, Google, DarkMode, LightMode, Language } from '@mui/icons-material';
-import MicrosoftIcon from '@mui/icons-material/Window';
+import { DarkMode, LightMode, Language, Email } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import Footer from '../components/Footer';
 import LoadingPage from '../components/LoadingPage';
-import { SvgIcon } from '@mui/material';
 
 // Importar la fuente Inter
 import '@fontsource/inter';
@@ -61,22 +58,7 @@ const AnimatedLogo = () => (
   />
 );
 
-// Componente personalizado para el icono de Discord
-const DiscordIcon = (props) => (
-  <SvgIcon {...props}>
-    <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09-.01-.02-.04-.03-.07-.03-1.5.26-2.93.71-4.27 1.33-.01 0-.02.01-.03.02-2.72 4.07-3.47 8.03-3.1 11.95 0 .02.01.04.03.05 1.8 1.32 3.53 2.12 5.24 2.65.03.01.06 0 .07-.02.4-.55.76-1.13 1.07-1.74.02-.04 0-.08-.04-.09-.57-.22-1.11-.48-1.64-.78-.04-.02-.04-.08-.01-.11.11-.08.22-.17.33-.25.02-.02.05-.02.07-.01 3.44 1.57 7.15 1.57 10.55 0 .02-.01.05-.01.07.01.11.09.22.17.33.26.04.03.03.09-.01.11-.52.31-1.07.56-1.64.78-.04.01-.05.06-.04.09.32.61.68 1.19 1.07 1.74.03.01.06.02.09.01 1.72-.53 3.45-1.33 5.25-2.65.02-.01.03-.03.03-.05.44-4.53-.73-8.46-3.1-11.95-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.83 2.12-1.89 2.12z"/>
-  </SvgIcon>
-);
-
-// Si MicrosoftIcon ya está definido en otra parte, no lo redefinamos aquí
-// En su lugar, usemos el MicrosoftIcon existente o creemos uno con un nombre diferente si es necesario
-const MicrosoftIconCustom = (props) => (
-  <SvgIcon {...props}>
-    <path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z"/>
-  </SvgIcon>
-);
-
-const SignUp = () => {
+const ForgotPassword = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState(() => localStorage.getItem('colorMode') || 'light');
   const theme = useMemo(
@@ -106,7 +88,6 @@ const SignUp = () => {
   );
   const { t, i18n } = useTranslation();
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -120,7 +101,8 @@ const SignUp = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('Registro con:', email, password);
+    console.log('Solicitud de restablecimiento de contraseña para:', email);
+    // Aquí iría la lógica para enviar la solicitud de restablecimiento de contraseña
   };
 
   const toggleColorMode = () => {
@@ -151,13 +133,6 @@ const SignUp = () => {
       navigate('/');
     }, 800); 
   };
-
-  const socialButtons = [
-    { icon: <GitHub />, name: 'GitHub', color: theme.palette.mode === 'dark' ? '#ffffff' : '#333' },
-    { icon: <MicrosoftIconCustom />, name: 'Microsoft', color: '#00A4EF' },
-    { icon: <Google />, name: 'Google', color: '#DB4437' },
-    { icon: <DiscordIcon />, name: 'Discord', color: '#7289DA' },
-  ];
 
   if (isLoading) {
     return <LoadingPage mode={mode} />;
@@ -247,60 +222,30 @@ const SignUp = () => {
             <img src="/carminder.png" alt="Carminder Logo" style={{ width: '100px', marginBottom: '20px' }} />
             
             <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
-              {t('signInWith')}
+              {t('resetPassword')}
             </Typography>
             
-            <Grid container spacing={2} sx={{ mt: 2, mb: 2 }}>
-              {socialButtons.map((button) => (
-                <Grid item xs={6} key={button.name}>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    startIcon={typeof button.icon === 'string' ? null : button.icon}
-                    sx={{
-                      borderColor: button.color,
-                      color: button.color,
-                      '&:hover': {
-                        bgcolor: `${button.color}10`,
-                      },
-                    }}
-                  >
-                    {typeof button.icon === 'string' && (
-                      <span style={{ marginRight: '8px', fontWeight: 'bold' }}>{button.icon}</span>
-                    )}
-                    {button.name}
-                  </Button>
-                </Grid>
-              ))}
-            </Grid>
-            <Divider sx={{ width: '100%', mb: 2 }}>{t('or')}</Divider>
-            <Typography component="h2" variant="h6">
-              {t('usingPassword')}
+            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+              {t('enterEmailForReset')}
             </Typography>
+
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="email"
-                label={t('emailOrUsername')}
+                label={t('email')}
                 name="email"
                 autoComplete="email"
                 autoFocus
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label={t('password')}
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <Email color="action" sx={{ mr: 1 }} />
+                  ),
+                }}
               />
               <Button
                 type="submit"
@@ -308,17 +253,12 @@ const SignUp = () => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                {t('signIn')}
+                {t('sendResetLink')}
               </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link component={RouterLink} to="/forgot-password" variant="body2">
-                    {t('forgotPassword')}
-                  </Link>
-                </Grid>
+              <Grid container justifyContent="center">
                 <Grid item>
-                  <Link component={RouterLink} to="/register" variant="body2">
-                    {t('createAccount')}
+                  <Link component={RouterLink} to="/sign-up" variant="body2">
+                    {t('backToLogin')}
                   </Link>
                 </Grid>
               </Grid>
@@ -334,4 +274,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default ForgotPassword;

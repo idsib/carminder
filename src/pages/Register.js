@@ -4,31 +4,25 @@ import {
   AppBar,
   Toolbar,
   Box,
-  Button,
-  TextField,
   Typography,
   Container,
-  Grid,
-  Divider,
-  Link,
   IconButton,
-  useMediaQuery,
-  Paper,
   Menu,
   MenuItem,
   ThemeProvider,
   createTheme,
   CssBaseline,
+  Paper,
+  TextField,
+  Button,
+  Grid,
+  Link,
 } from '@mui/material';
-import { GitHub, Google, DarkMode, LightMode, Language } from '@mui/icons-material';
-import MicrosoftIcon from '@mui/icons-material/Window';
+import { DarkMode, LightMode, Language } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import Footer from '../components/Footer';
 import LoadingPage from '../components/LoadingPage';
-import { SvgIcon } from '@mui/material';
-
-// Importar la fuente Inter
-import '@fontsource/inter';
+import { useForm, Controller } from 'react-hook-form';
 
 const AnimatedLogo = () => (
   <Box
@@ -61,22 +55,7 @@ const AnimatedLogo = () => (
   />
 );
 
-// Componente personalizado para el icono de Discord
-const DiscordIcon = (props) => (
-  <SvgIcon {...props}>
-    <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09-.01-.02-.04-.03-.07-.03-1.5.26-2.93.71-4.27 1.33-.01 0-.02.01-.03.02-2.72 4.07-3.47 8.03-3.1 11.95 0 .02.01.04.03.05 1.8 1.32 3.53 2.12 5.24 2.65.03.01.06 0 .07-.02.4-.55.76-1.13 1.07-1.74.02-.04 0-.08-.04-.09-.57-.22-1.11-.48-1.64-.78-.04-.02-.04-.08-.01-.11.11-.08.22-.17.33-.25.02-.02.05-.02.07-.01 3.44 1.57 7.15 1.57 10.55 0 .02-.01.05-.01.07.01.11.09.22.17.33.26.04.03.03.09-.01.11-.52.31-1.07.56-1.64.78-.04.01-.05.06-.04.09.32.61.68 1.19 1.07 1.74.03.01.06.02.09.01 1.72-.53 3.45-1.33 5.25-2.65.02-.01.03-.03.03-.05.44-4.53-.73-8.46-3.1-11.95-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.83 2.12-1.89 2.12z"/>
-  </SvgIcon>
-);
-
-// Si MicrosoftIcon ya está definido en otra parte, no lo redefinamos aquí
-// En su lugar, usemos el MicrosoftIcon existente o creemos uno con un nombre diferente si es necesario
-const MicrosoftIconCustom = (props) => (
-  <SvgIcon {...props}>
-    <path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z"/>
-  </SvgIcon>
-);
-
-const SignUp = () => {
+const Register = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState(() => localStorage.getItem('colorMode') || 'light');
   const theme = useMemo(
@@ -105,11 +84,15 @@ const SignUp = () => {
     [mode],
   );
   const { t, i18n } = useTranslation();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { control, handleSubmit, formState: { errors } } = useForm();
+
+  const onSubmit = (data) => {
+    console.log(data);
+    // Aquí puedes manejar la lógica de registro
+  };
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language');
@@ -117,11 +100,6 @@ const SignUp = () => {
       i18n.changeLanguage(savedLanguage);
     }
   }, [i18n]);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log('Registro con:', email, password);
-  };
 
   const toggleColorMode = () => {
     const newMode = mode === 'light' ? 'dark' : 'light';
@@ -149,15 +127,8 @@ const SignUp = () => {
     logo.style.animation = 'rotate 0.3s linear';
     setTimeout(() => {
       navigate('/');
-    }, 800); 
+    }, 800);
   };
-
-  const socialButtons = [
-    { icon: <GitHub />, name: 'GitHub', color: theme.palette.mode === 'dark' ? '#ffffff' : '#333' },
-    { icon: <MicrosoftIconCustom />, name: 'Microsoft', color: '#00A4EF' },
-    { icon: <Google />, name: 'Google', color: '#DB4437' },
-    { icon: <DiscordIcon />, name: 'Discord', color: '#7289DA' },
-  ];
 
   if (isLoading) {
     return <LoadingPage mode={mode} />;
@@ -245,84 +216,130 @@ const SignUp = () => {
             backgroundColor: theme.palette.mode === 'dark' ? 'rgba(30, 30, 30, 0.8)' : 'rgba(255, 255, 255, 0.8)',
           }}>
             <img src="/carminder.png" alt="Carminder Logo" style={{ width: '100px', marginBottom: '20px' }} />
-            
             <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
-              {t('signInWith')}
+              {t('register')}
             </Typography>
-            
-            <Grid container spacing={2} sx={{ mt: 2, mb: 2 }}>
-              {socialButtons.map((button) => (
-                <Grid item xs={6} key={button.name}>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    startIcon={typeof button.icon === 'string' ? null : button.icon}
-                    sx={{
-                      borderColor: button.color,
-                      color: button.color,
-                      '&:hover': {
-                        bgcolor: `${button.color}10`,
-                      },
-                    }}
-                  >
-                    {typeof button.icon === 'string' && (
-                      <span style={{ marginRight: '8px', fontWeight: 'bold' }}>{button.icon}</span>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <Controller
+                    name="firstName"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: t('firstNameRequired') }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label={t('firstName')}
+                        error={!!errors.firstName}
+                        helperText={errors.firstName?.message}
+                      />
                     )}
-                    {button.name}
-                  </Button>
+                  />
                 </Grid>
-              ))}
-            </Grid>
-            <Divider sx={{ width: '100%', mb: 2 }}>{t('or')}</Divider>
-            <Typography component="h2" variant="h6">
-              {t('usingPassword')}
-            </Typography>
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label={t('emailOrUsername')}
-                name="email"
-                autoComplete="email"
-                autoFocus
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label={t('password')}
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+                <Grid item xs={12} sm={6}>
+                  <Controller
+                    name="lastName"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: t('lastNameRequired') }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label={t('lastName')}
+                        error={!!errors.lastName}
+                        helperText={errors.lastName?.message}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Controller
+                    name="email"
+                    control={control}
+                    defaultValue=""
+                    rules={{ 
+                      required: t('emailRequired'),
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: t('invalidEmail')
+                      }
+                    }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label={t('email')}
+                        error={!!errors.email}
+                        helperText={errors.email?.message}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Controller
+                    name="password"
+                    control={control}
+                    defaultValue=""
+                    rules={{ 
+                      required: t('passwordRequired'),
+                      minLength: {
+                        value: 8,
+                        message: t('passwordMinLength')
+                      }
+                    }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label={t('password')}
+                        type="password"
+                        error={!!errors.password}
+                        helperText={errors.password?.message}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Controller
+                    name="confirmPassword"
+                    control={control}
+                    defaultValue=""
+                    rules={{ 
+                      required: t('confirmPasswordRequired'),
+                      validate: (value) => value === control._formValues.password || t('passwordsMustMatch')
+                    }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        label={t('confirmPassword')}
+                        type="password"
+                        error={!!errors.confirmPassword}
+                        helperText={errors.confirmPassword?.message}
+                      />
+                    )}
+                  />
+                </Grid>
+              </Grid>
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                {t('signIn')}
+                {t('register')}
               </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link component={RouterLink} to="/forgot-password" variant="body2">
-                    {t('forgotPassword')}
-                  </Link>
-                </Grid>
+              <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link component={RouterLink} to="/register" variant="body2">
-                    {t('createAccount')}
+                  <Link component={RouterLink} to="/sign-up" variant="body2">
+                    {t('alreadyHaveAccount')}
                   </Link>
                 </Grid>
               </Grid>
-            </Box>
+            </form>
           </Paper>
         </Container>
         
@@ -334,4 +351,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Register;

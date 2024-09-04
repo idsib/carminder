@@ -7,7 +7,10 @@ import HistorialTareas from './pages/HistorialTareas';
 import Inicio from './pages/Inicio';
 import TareasActivas from './pages/TareasActivas';
 import SignUp from './pages/SignUp';
+import Register from './pages/Register';
 import theme from './theme/theme';
+import ForgotPassword from './pages/ForgotPassword';
+
 // Importa la fuente Inter
 import '@fontsource/inter';
 // Importa createTheme para modificar el tema
@@ -32,6 +35,9 @@ function App() {
           <Route path="/historial-tareas" element={<HistorialTareas />} />
           <Route path="/tareas-activas" element={<TareasActivas />} />
           <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

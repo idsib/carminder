@@ -10,5 +10,11 @@
     "maintenanceTrackingDescription": "Keep a detailed record of all maintenance tasks performed on your vehicles.",
     "getStarted": "Get Started",
     "viewDocumentation": "View Documentation",
-    "signUp": "Sign Up"
+    "signUp": "Sign Up",
+    "footer": {
+        "createdBy": "Created by",
+        "openSource": "Open Source",
+        "features": "Features",
+        "docs": "Docs"
+    }
 }

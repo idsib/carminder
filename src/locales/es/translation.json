@@ -10,5 +10,11 @@
     "maintenanceTrackingDescription": "Lleva un registro detallado de todas las tareas de mantenimiento realizadas en tus vehículos.",
     "getStarted": "Comenzar",
     "viewDocumentation": "Ver Documentación",
-    "signUp": "Registrarse"
+    "signUp": "Registrarse",
+    "footer": {
+        "createdBy": "Creado por",
+        "openSource": "Código Abierto",
+        "features": "Características",
+        "docs": "Documentación"
+    }
 }

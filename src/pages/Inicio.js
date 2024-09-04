@@ -20,6 +20,7 @@ import {
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../components/Footer';
 
 const MovingBackground = () => (
   <Box
@@ -361,19 +362,27 @@ export default function CarTaskManager() {
               ))}
             </Grid>
 
-            <Box sx={{ mt: 6, textAlign: 'center' }}>
+            <Box sx={{ 
+              mt: 6, 
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: { xs: 2, sm: 2 }
+            }}>
               <Button 
                 variant="contained" 
                 color="primary" 
                 size="large" 
                 sx={{ 
-                  mr: 2, 
                   borderRadius: '50px', 
                   padding: '10px 30px',
                   boxShadow: '0 4px 14px 0 rgba(76, 175, 80, 0.39)',
                   '&:hover': {
                     boxShadow: '0 6px 20px 0 rgba(76, 175, 80, 0.5)',
-                  }
+                  },
+                  width: { xs: '100%', sm: 'auto' }
                 }}
               >
                 {t('getStarted')}
@@ -385,6 +394,7 @@ export default function CarTaskManager() {
                 sx={{ 
                   borderRadius: '50px', 
                   padding: '10px 30px',
+                  width: { xs: '100%', sm: 'auto' }
                 }}
               >
                 {t('viewDocumentation')}
@@ -392,6 +402,8 @@ export default function CarTaskManager() {
             </Box>
           </Box>
         </Container>
+
+        <Footer />
       </Box>
     </ThemeProvider>
   );

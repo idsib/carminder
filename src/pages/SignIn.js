@@ -30,6 +30,7 @@ import { SvgIcon } from '@mui/material';
 // Importar la fuente Inter
 import '@fontsource/inter';
 
+
 const AnimatedLogo = () => (
   <Box
     sx={{

@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, Navigate } from 'react-router-dom';
 import Footer from '../components/Footer';
 
-const MovingBackground = () => (
+export const MovingBackground = () => (
   <Box
     sx={{
       position: 'fixed',
@@ -201,7 +201,18 @@ export default function CarTaskManager() {
           }}
         >
           <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box 
+              sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                cursor: 'pointer',
+                transition: 'transform 0.3s ease-in-out',
+                '&:hover': {
+                  transform: 'scale(1.1)',
+                },
+              }}
+              onClick={() => navigate('/')}
+            >
               <img
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/carminder-bZFEVGRBpyi8WS2AfdnDvVepJGPvuv.png"
                 alt="CarMinder Logo"
@@ -336,7 +347,7 @@ export default function CarTaskManager() {
 
             <Grid container spacing={4} justifyContent="center">
               {[
-                { icon: <DirectionsCar />, title: t('fleetManagement'), description: t('fleetManagementDescription'), route: '/tareas-activas' },
+                { icon: <DirectionsCar />, title: t('fleetManagement'), description: t('fleetManagementDescription'), route: '/gestion-vehiculos' },
                 { icon: <Schedule />, title: t('taskScheduling'), description: t('taskSchedulingDescription'), route: '/historial-tareas' },
               ].map((feature, index) => (
                 <Grid item xs={12} sm={6} key={index}>

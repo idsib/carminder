@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
   AppBar,
@@ -15,12 +15,46 @@ import {
   Menu as MuiMenu,
   MenuItem,
   Toolbar,
+  FormControl,
+  InputLabel,
+  Select,
+  Avatar,
+  Grid,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { DirectionsCar, GitHub, Menu, Schedule, DarkMode, LightMode, Language, Login } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, Navigate } from 'react-router-dom';
 import Footer from '../components/Footer';
 import { MovingBackground} from './Inicio';
+import { getMarcas, getModelos, guardarVehiculo } from '../api/vehiculosApi';
+
+const LogoImage = ({ logos, alt }) => {
+  const [currentLogoIndex, setCurrentLogoIndex] = useState(0);
+  const [hasError, setHasError] = useState(false);
+
+  const handleError = () => {
+    if (currentLogoIndex < logos.length - 1) {
+      setCurrentLogoIndex(currentLogoIndex + 1);
+    } else {
+      setHasError(true);
+    }
+  };
+
+  if (hasError) {
+    return <DirectionsCar sx={{ width: 24, height: 24, marginRight: 1 }} />;
+  }
+
+  return (
+    <Avatar
+      src={logos[currentLogoIndex]}
+      alt={alt}
+      onError={handleError}
+      sx={{ width: 24, height: 24, marginRight: 1 }}
+    />
+  );
+};
 
 export default function GestionVehiculos() {
   const [mode, setMode] = useState(() => localStorage.getItem('colorMode') || 'light');
@@ -52,6 +86,20 @@ export default function GestionVehiculos() {
   const navigate = useNavigate();
   const [redirectToSignUp, setRedirectToSignUp] = useState(false);
   const [anchorElLang, setAnchorElLang] = useState(null);
+  const [marcas, setMarcas] = useState([]);
+  const [modelos, setModelos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
+
+  const [formData, setFormData] = useState({
+    marca: '',
+    modelo: '',
+    año: '', // Añadimos el campo de año
+    kilometros: '',
+    ultimoMantenimiento: '',
+    proximoMantenimiento: '',
+    notas: '',
+  });
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language');
@@ -59,6 +107,42 @@ export default function GestionVehiculos() {
       i18n.changeLanguage(savedLanguage);
     }
   }, [i18n]);
+
+  useEffect(() => {
+    const fetchMarcas = async () => {
+      setLoading(true);
+      try {
+        const marcasData = await getMarcas();
+        setMarcas(marcasData);
+      } catch (error) {
+        console.error('Error al cargar las marcas:', error);
+        setSnackbar({ open: true, message: t('Error al cargar las marcas'), severity: 'error' });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMarcas();
+  }, [t]);
+
+  useEffect(() => {
+    const fetchModelos = async () => {
+      if (formData.marca) {
+        setLoading(true);
+        try {
+          const modelosData = await getModelos(formData.marca);
+          setModelos(modelosData);
+        } catch (error) {
+          console.error('Error al cargar los modelos:', error);
+          setSnackbar({ open: true, message: t('Error al cargar los modelos'), severity: 'error' });
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setModelos([]);
+      }
+    };
+    fetchModelos();
+  }, [formData.marca, t]);
 
   if (redirectToSignUp) {
     return <Navigate to="/sign-in" replace />;
@@ -105,24 +189,27 @@ export default function GestionVehiculos() {
     handleClose(); 
   };
 
-  const [formData, setFormData] = useState({
-    marca: '',
-    modelo: '',
-    kilometros: '',
-    ultimoMantenimiento: '',
-    proximoMantenimiento: '',
-    notas: '',
-  });
-
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value,
+      ...(name === 'marca' ? { modelo: '' } : {})
+    }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Datos del formulario:', formData);
-    // Aquí puedes agregar la lógica para enviar los datos a tu backend
+    setLoading(true);
+    try {
+      const result = await guardarVehiculo(formData);
+      setSnackbar({ open: true, message: t(result.message), severity: 'success' });
+    } catch (error) {
+      console.error('Error al guardar el vehículo:', error);
+      setSnackbar({ open: true, message: t('Error al guardar el vehículo'), severity: 'error' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fadeInUp = {
@@ -137,6 +224,18 @@ export default function GestionVehiculos() {
         staggerChildren: 0.1
       }
     }
+  };
+
+  const textVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({ ...snackbar, open: false });
   };
 
   return (
@@ -300,39 +399,141 @@ export default function GestionVehiculos() {
               boxShadow: `0 8px 32px 0 ${theme.palette.mode === 'dark' ? 'rgba(76, 175, 80, 0.37)' : 'rgba(76, 175, 80, 0.37)'}`,
             }}>
               <motion.div variants={fadeInUp}>
-                <Typography variant="h4" component="h1" gutterBottom align="center">
-                  {t('Gestión de Vehículos')}
-                </Typography>
+                <Box sx={{ overflow: 'hidden' }}>
+                  <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={textVariants}
+                  >
+                    <Typography 
+                      variant="h4" 
+                      component="h1" 
+                      gutterBottom 
+                      align="center"
+                      sx={{ 
+                        fontWeight: 'bold',
+                        background: 'linear-gradient(45deg, #4caf50 30%, #2196f3 90%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                      }}
+                    >
+                      {t('Gestión de Vehículos')}
+                    </Typography>
+                  </motion.div>
+                </Box>
               </motion.div>
               <form onSubmit={handleSubmit}>
-                {Object.entries(formData).map(([key, value]) => (
-                  <motion.div key={key} variants={fadeInUp}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth>
+                      <InputLabel id="marca-label">{t('Marca')}</InputLabel>
+                      <Select
+                        labelId="marca-label"
+                        name="marca"
+                        value={formData.marca}
+                        onChange={handleInputChange}
+                        label={t('Marca')}
+                        disabled={loading}
+                      >
+                        {marcas.map((marca) => (
+                          <MenuItem key={marca.make_id} value={marca.make_id}>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <LogoImage logos={marca.make_logos} alt={marca.make_display} />
+                              <Typography>{marca.make_display}</Typography>
+                            </Box>
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth disabled={!formData.marca || loading}>
+                      <InputLabel id="modelo-label">{t('Modelo')}</InputLabel>
+                      <Select
+                        labelId="modelo-label"
+                        name="modelo"
+                        value={formData.modelo}
+                        onChange={handleInputChange}
+                        label={t('Modelo')}
+                      >
+                        {modelos.map((modelo) => (
+                          <MenuItem key={modelo.model_name} value={modelo.model_name}>
+                            {modelo.model_name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
-                      label={t(key.charAt(0).toUpperCase() + key.slice(1))}
-                      name={key}
-                      value={value}
+                      label={t('Año')}
+                      name="año"
+                      value={formData.año}
                       onChange={handleInputChange}
-                      margin="normal"
-                      required={key !== 'notas'}
-                      multiline={key === 'notas'}
-                      rows={key === 'notas' ? 4 : 1}
-                      type={key.includes('fecha') ? 'date' : key === 'kilometros' ? 'number' : 'text'}
-                      InputLabelProps={key.includes('fecha') ? { shrink: true } : undefined}
+                      type="number"
+                      InputProps={{ inputProps: { min: 1900, max: new Date().getFullYear() } }}
+                      required
                     />
-                  </motion.div>
-                ))}
-                <motion.div variants={fadeInUp}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    sx={{ mt: 2 }}
-                  >
-                    {t('Guardar')}
-                  </Button>
-                </motion.div>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label={t('Kilometros')}
+                      name="kilometros"
+                      value={formData.kilometros}
+                      onChange={handleInputChange}
+                      type="number"
+                      required
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label={t('Último Mantenimiento')}
+                      name="ultimoMantenimiento"
+                      value={formData.ultimoMantenimiento}
+                      onChange={handleInputChange}
+                      type="date"
+                      InputLabelProps={{ shrink: true }}
+                      required
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label={t('Próximo Mantenimiento')}
+                      name="proximoMantenimiento"
+                      value={formData.proximoMantenimiento}
+                      onChange={handleInputChange}
+                      type="date"
+                      InputLabelProps={{ shrink: true }}
+                      required
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label={t('Notas')}
+                      name="notas"
+                      value={formData.notas}
+                      onChange={handleInputChange}
+                      multiline
+                      rows={4}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      disabled={loading}
+                    >
+                      {loading ? t('Guardando...') : t('Guardar')}
+                    </Button>
+                  </Grid>
+                </Grid>
               </form>
             </Box>
           </motion.div>
@@ -340,6 +541,17 @@ export default function GestionVehiculos() {
 
         <Footer />
       </Box>
+
+      <Snackbar 
+        open={snackbar.open} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </ThemeProvider>
   );
 }

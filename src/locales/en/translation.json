@@ -67,5 +67,14 @@
     "Does Carminder work offline?": "Does Carminder work offline?",
     "Most basic functions are available offline, but you'll need internet access for features like workshop locator and database updates.": "Most basic functions are available offline, but you'll need internet access for features like workshop locator and database updates.",
     "How can I get technical support?": "How can I get technical support?",
-    "Visit our Support section or send us an email at help@carminder.com.": "Visit our Support section or send us an email at help@carminder.com."
+    "Visit our Support section or send us an email at help@carminder.com.": "Visit our Support section or send us an email at help@carminder.com.",
+    "Gestión de Vehículos": "Vehicle Management",
+    "Marca": "Brand",
+    "Modelo": "Model",
+    "Año": "Year", 
+    "Kilometros": "Mileage",
+    "Último Mantenimiento": "Last Maintenance",
+    "Próximo Mantenimiento": "Next Maintenance",
+    "Notas": "Notes",
+    "Guardar": "Save"
 }

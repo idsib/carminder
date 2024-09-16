@@ -2,7 +2,7 @@
     "appName": "CarMinder",
     "simplifyMaintenance": "Simplifica el Mantenimiento de tu Coche",
     "manageTasks": "Gestiona tareas, realiza un seguimiento del mantenimiento y mantén tu vehiculo en óptimas condiciones con CarMinder.",
-    "fleetManagement": "Gestión de Vehiculos",
+    "fleetManagement": "Gestión de Vehículos",
     "fleetManagementDescription": "Gestiona fácilmente todos los vehículos de tu vehiculo desde un único lugar.",
     "taskScheduling": "Programación de Tareas",
     "taskSchedulingDescription": "Planifica y programa tareas de mantenimiento para cada vehículo de forma sencilla.",
@@ -65,5 +65,13 @@
     "Does Carminder work offline?": "¿Carminder funciona sin conexión?",
     "Most basic functions are available offline, but you'll need internet access for features like workshop locator and database updates.": "La mayoría de las funciones básicas están disponibles sin conexión, pero necesitarás acceso a internet para funciones como el localizador de talleres y las actualizaciones de la base de datos.",
     "How can I get technical support?": "¿Cómo puedo obtener soporte técnico?",
-    "Visit our Support section or send us an email at help@carminder.com.": "Visita nuestra sección de Soporte o envíanos un correo electrónico a help@carminder.com."
+    "Visit our Support section or send us an email at help@carminder.com.": "Visita nuestra sección de Soporte o envíanos un correo electrónico a help@carminder.com.",
+    "Gestión de Vehículos": "Gestión de Vehículos",
+    "Marca": "Marca",
+    "Modelo": "Modelo",
+    "Kilometros": "Kilómetros",
+    "Ultimomantenimiento": "Último mantenimiento",
+    "Proximomantenimiento": "Próximo mantenimiento",
+    "Notas": "Notas",
+    "Guardar": "Guardar"
 }

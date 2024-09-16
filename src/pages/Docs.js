@@ -16,7 +16,6 @@ import {
   Button,
   Menu,
   MenuItem,
-  Grow,
 } from '@mui/material';
 import { GitHub, Menu as MenuIcon, DarkMode, LightMode, Language, Description, Home } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
@@ -125,6 +124,42 @@ const Docs = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const SpotlightCard = ({ children }) => {
+    return (
+      <Box
+        sx={{
+          position: 'relative',
+          overflow: 'hidden',
+          borderRadius: '20px',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            right: '0',
+            bottom: '0',
+            background: 'radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.2), transparent 40%)',
+            opacity: 0,
+            transition: 'opacity 0.3s',
+            pointerEvents: 'none',
+          },
+          '&:hover::before': {
+            opacity: 1,
+          },
+        }}
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+          e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+        }}
+      >
+        {children}
+      </Box>
+    );
   };
 
   if (isLoading) {
@@ -294,7 +329,7 @@ const Docs = () => {
                 t('📸 Vehicle document scanning')
               ].map((feature, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Grow in={true} timeout={(index + 1) * 500}>
+                  <SpotlightCard>
                     <Card 
                       sx={{ 
                         height: '100%',
@@ -303,13 +338,14 @@ const Docs = () => {
                           transform: 'translateY(-5px)',
                           boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
                         },
+                        background: 'transparent',
                       }}
                     >
                       <CardContent>
                         <Typography variant="body1">{feature}</Typography>
                       </CardContent>
                     </Card>
-                  </Grow>
+                  </SpotlightCard>
                 </Grid>
               ))}
             </Grid>

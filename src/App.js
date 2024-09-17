@@ -1,7 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './i18n';
 import HistorialTareas from './pages/HistorialTareas';
 import Inicio from './pages/Inicio';
@@ -11,6 +11,8 @@ import Docs from './pages/Docs';
 import theme from './theme/theme';
 import ForgotPassword from './pages/ForgotPassword';
 import GestionVehiculos from './pages/GestionVehiculos';
+import Inventario from './pages/Inventario'
+
 
 // Importa la fuente Inter
 import '@fontsource/inter';
@@ -30,7 +32,7 @@ function App() {
   return (
     <ThemeProvider theme={interTheme}>
       <CssBaseline />
-      <BrowserRouter>
+      <Router>
         <Routes>
           <Route path="/" element={<Inicio />} /> {/* Set Inicio as the default route */}
           <Route path="/historial-tareas" element={<HistorialTareas />} />
@@ -39,9 +41,9 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/documentation" element={<Docs />} />
-
+          <Route path="/inventario" element={<Inventario />} />
         </Routes>
-      </BrowserRouter>
+      </Router>
     </ThemeProvider>
   );
 }

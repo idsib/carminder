@@ -88,3 +88,19 @@ export const guardarVehiculo = async (datosVehiculo) => {
     }, 1000);
   });
 };
+
+export const getVehiculos = async () => {
+  // Datos de ejemplo
+  const vehiculosEjemplo = [
+    { id: 1, marca: 'Toyota', modelo: 'Corolla', año: 2020, kilometros: 30000, ultimoMantenimiento: '2023-01-15', proximoMantenimiento: '2023-07-15' },
+    { id: 2, marca: 'Honda', modelo: 'Civic', año: 2019, kilometros: 45000, ultimoMantenimiento: '2022-11-20', proximoMantenimiento: '2023-05-20' },
+    { id: 3, marca: 'Ford', modelo: 'Focus', año: 2021, kilometros: 15000, ultimoMantenimiento: '2023-03-10', proximoMantenimiento: '2023-09-10' },
+  ];
+
+  // Simula una llamada asíncrona
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(vehiculosEjemplo);
+    }, 500);
+  });
+};

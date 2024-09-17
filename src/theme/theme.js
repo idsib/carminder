@@ -3,13 +3,12 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#4caf50', // Verde, puedes cambiarlo según tus preferencias
+      main: '#4caf50',
     },
     secondary: {
-      main: '#2196f3', // Azul, puedes cambiarlo según tus preferencias
+      main: '#2196f3',
     },
   },
-  // Puedes añadir más personalizaciones aquí
 });
 
 export default theme;

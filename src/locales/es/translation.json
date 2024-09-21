@@ -102,5 +102,7 @@
     "Complete Task": "Completar Tarea",
     "ES": "ES",
     "EN": "EN",
-    "SIGN IN": "INICIAR SESIÓN"
+    "SIGN IN": "INICIAR SESIÓN",
+    "socialSignInError": "Ocurrió un error durante el inicio de sesión social. Por favor, inténtalo de nuevo.",
+    "signInError": "Correo electrónico o contraseña inválidos. Por favor, inténtalo de nuevo."
 }

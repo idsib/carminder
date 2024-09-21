@@ -19,6 +19,7 @@ import {
   ThemeProvider,
   createTheme,
   CssBaseline,
+  Alert,
 } from '@mui/material';
 import { GitHub, Google, DarkMode, LightMode, Language } from '@mui/icons-material';
 import MicrosoftIcon from '@mui/icons-material/Window';
@@ -26,10 +27,12 @@ import { useTranslation } from 'react-i18next';
 import Footer from '../components/Footer';
 import LoadingPage from '../components/LoadingPage';
 import { SvgIcon } from '@mui/material';
+import { createClient } from '@supabase/supabase-js';
 
 // Importar la fuente Inter
 import '@fontsource/inter';
 
+const supabase = createClient(process.env.REACT_APP_SUPABASE_URL, process.env.REACT_APP_SUPABASE_ANON_KEY);
 
 const AnimatedLogo = () => (
   <Box
@@ -111,6 +114,7 @@ const SignIn = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language');
@@ -119,16 +123,42 @@ const SignIn = () => {
     }
   }, [i18n]);
 
-  const handleSubmit = (event) => {
+  const handleSocialSignIn = async (provider) => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: provider,
+      });
+
+      if (error) throw error;
+
+      // El usuario será redirigido a la página de autenticación del proveedor.
+      // Después de una autenticación exitosa, Supabase redirigirá al usuario de vuelta a tu aplicación.
+    } catch (error) {
+      console.error('Error durante el inicio de sesión social:', error.message);
+      setError(t('socialSignInError'));
+    }
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Inicio de sesión con:', email, password);
-    // Aquí iría la lógica de autenticación real
-    // Por ahora, simularemos un inicio de sesión exitoso
     setIsLoading(true);
-    setTimeout(() => {
+    setError('');
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+
+      if (error) throw error;
+
+      console.log('Usuario autenticado:', data.user);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error durante el inicio de sesión:', error.message);
+      setError(t('signInError'));
+    } finally {
       setIsLoading(false);
-      navigate('/dashboard'); // Redirige al dashboard después del inicio de sesión
-    }, 1000);
+    }
   };
 
   const toggleColorMode = () => {
@@ -161,10 +191,10 @@ const SignIn = () => {
   };
 
   const socialButtons = [
-    { icon: <GitHub />, name: 'GitHub', color: theme.palette.mode === 'dark' ? '#ffffff' : '#333' },
-    { icon: <MicrosoftIconCustom />, name: 'Microsoft', color: '#00A4EF' },
-    { icon: <Google />, name: 'Google', color: '#DB4437' },
-    { icon: <DiscordIcon />, name: 'Discord', color: '#7289DA' },
+    { icon: <GitHub />, name: 'GitHub', color: theme.palette.mode === 'dark' ? '#ffffff' : '#333', provider: 'github' },
+    { icon: <MicrosoftIconCustom />, name: 'Microsoft', color: '#00A4EF', provider: 'azure' },
+    { icon: <Google />, name: 'Google', color: '#DB4437', provider: 'google' },
+    { icon: <DiscordIcon />, name: 'Discord', color: '#7289DA', provider: 'discord' },
   ];
 
   if (isLoading) {
@@ -258,13 +288,14 @@ const SignIn = () => {
               {t('signInWith')}
             </Typography>
             
+            {error && <Alert severity="error" sx={{ mt: 2, mb: 2 }}>{error}</Alert>}
             <Grid container spacing={2} sx={{ mt: 2, mb: 2 }}>
               {socialButtons.map((button) => (
                 <Grid item xs={6} key={button.name}>
                   <Button
                     fullWidth
                     variant="outlined"
-                    startIcon={typeof button.icon === 'string' ? null : button.icon}
+                    startIcon={button.icon}
                     sx={{
                       borderColor: button.color,
                       color: button.color,
@@ -272,10 +303,8 @@ const SignIn = () => {
                         bgcolor: `${button.color}10`,
                       },
                     }}
+                    onClick={() => handleSocialSignIn(button.provider)}
                   >
-                    {typeof button.icon === 'string' && (
-                      <span style={{ marginRight: '8px', fontWeight: 'bold' }}>{button.icon}</span>
-                    )}
                     {button.name}
                   </Button>
                 </Grid>

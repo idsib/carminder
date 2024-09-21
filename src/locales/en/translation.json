@@ -105,5 +105,10 @@
     "Complete Task": "Complete Task",
     "ES": "ES",
     "EN": "EN",
-    "SIGN IN": "SIGN IN"
+    "SIGN IN": "SIGN IN",
+    "emailAlreadyRegistered": "This email is already registered",
+    "registrationSuccessful": "Registration successful! Please check your email to verify your account.",
+    "registrationError": "An error occurred during registration. Please try again.",
+    "socialSignInError": "An error occurred during social sign-in. Please try again.",
+    "signInError": "Invalid email or password. Please try again."
 }

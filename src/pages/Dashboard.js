@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   AppBar,
   Box,
@@ -44,6 +44,9 @@ import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import Footer from '../components/Footer';
 import { MovingBackground } from './Inicio';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(process.env.REACT_APP_SUPABASE_URL, process.env.REACT_APP_SUPABASE_ANON_KEY);
 
 const MotionCard = motion(Card);
 
@@ -65,6 +68,20 @@ export default function Dashboard() {
   const [anchorElMore, setAnchorElMore] = useState(null);
   const [anchorElLang, setAnchorElLang] = useState(null);
   const [anchorElMobileMenu, setAnchorElMobileMenu] = useState(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUser(user);
+      } else {
+        navigate('/sign-in');
+      }
+    };
+
+    checkUser();
+  }, [navigate]);
 
   const toggleColorMode = () => {
     const newMode = mode === 'light' ? 'dark' : 'light';
@@ -386,7 +403,7 @@ export default function Dashboard() {
         {/* Contenido principal del Dashboard */}
         <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
           <Typography variant="h4" component="h1" gutterBottom>
-            {t('Bienvenido de nuevo')}, Usuario
+            {t('Bienvenido de nuevo')}, {user?.email}
           </Typography>
           <Grid container spacing={3}>
             {cardItems.map((item, index) => (

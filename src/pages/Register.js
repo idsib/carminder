@@ -17,12 +17,17 @@ import {
   Button,
   Grid,
   Link,
+  Alert,
 } from '@mui/material';
 import { DarkMode, LightMode, Language } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import Footer from '../components/Footer';
 import LoadingPage from '../components/LoadingPage';
 import { useForm, Controller } from 'react-hook-form';
+import { createClient } from '@supabase/supabase-js';
+
+// Inicializar el cliente de Supabase
+const supabase = createClient(process.env.REACT_APP_SUPABASE_URL, process.env.REACT_APP_SUPABASE_ANON_KEY);
 
 const AnimatedLogo = () => (
   <Box
@@ -86,12 +91,41 @@ const Register = () => {
   const { t, i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState({ type: '', content: '' });
 
   const { control, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // Aquí puedes manejar la lógica de registro
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    setMessage({ type: '', content: '' });
+    try {
+      const { data: userData, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            first_name: data.firstName,
+            last_name: data.lastName,
+          }
+        }
+      });
+
+      if (error) {
+        if (error.message.includes('User already registered')) {
+          setMessage({ type: 'error', content: t('emailAlreadyRegistered') });
+        } else {
+          throw error;
+        }
+      } else if (userData) {
+        setMessage({ type: 'success', content: t('registrationSuccessful') });
+        setTimeout(() => navigate('/sign-in'), 2000);
+      }
+    } catch (error) {
+      console.error('Error durante el registro:', error.message);
+      setMessage({ type: 'error', content: t('registrationError') });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -219,6 +253,11 @@ const Register = () => {
             <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
               {t('register')}
             </Typography>
+            {message.content && (
+              <Alert severity={message.type} sx={{ width: '100%', mb: 2 }}>
+                {message.content}
+              </Alert>
+            )}
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>

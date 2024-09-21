@@ -121,7 +121,14 @@ const SignIn = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('Registro con:', email, password);
+    console.log('Inicio de sesión con:', email, password);
+    // Aquí iría la lógica de autenticación real
+    // Por ahora, simularemos un inicio de sesión exitoso
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      navigate('/dashboard'); // Redirige al dashboard después del inicio de sesión
+    }, 1000);
   };
 
   const toggleColorMode = () => {

@@ -153,7 +153,7 @@ export default function Inventario() {
                   transform: 'scale(1.1)',
                 },
               }}
-              onClick={() => navigate('/inventario')}
+              onClick={() => navigate('/')}
             >
               <img
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/carminder-bZFEVGRBpyi8WS2AfdnDvVepJGPvuv.png"
@@ -187,14 +187,16 @@ export default function Inventario() {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                   >
+                    <MenuItem onClick={() => { handleClose(); navigate('/'); }}>{t('Inicio')}</MenuItem>
                     <MenuItem onClick={() => { handleClose(); navigate('/gestion-vehiculos'); }}>{t('Gestión de Vehículos')}</MenuItem>
-                    <MenuItem onClick={() => { handleClose(); navigate('/historial-tareas'); }}>{t('Historial de Tareas')}</MenuItem>
+                    <MenuItem onClick={() => { handleClose(); navigate('/inventario'); }}>{t('Inventario')}</MenuItem>
                   </MuiMenu>
                 </>
               ) : (
                 <>
+                  <Button color="inherit" onClick={() => navigate('/')}>{t('Inicio')}</Button>
                   <Button color="inherit" onClick={() => navigate('/gestion-vehiculos')}>{t('Gestión de Vehículos')}</Button>
-                  <Button color="inherit" onClick={() => navigate('/historial-tareas')}>{t('Historial de Tareas')}</Button>
+                  <Button color="inherit" onClick={() => navigate('/inventario')}>{t('Inventario')}</Button>
                 </>
               )}
               <IconButton onClick={handleLanguageMenuOpen} color="inherit">
@@ -211,19 +213,6 @@ export default function Inventario() {
               <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
                 {theme.palette.mode === 'dark' ? <LightMode /> : <DarkMode />}
               </IconButton>
-              <Button 
-                variant="contained" 
-                color="primary"
-                onClick={handleLogout}
-                startIcon={<Logout />}
-                sx={{ 
-                  ml: 2,
-                  borderRadius: '20px',
-                  textTransform: 'none',
-                }}
-              >
-                {t('Cerrar Sesión')}
-              </Button>
             </Box>
           </Toolbar>
         </AppBar>

@@ -111,11 +111,7 @@ const Register = () => {
       });
 
       if (error) {
-        if (error.message.includes('User already registered')) {
-          setMessage({ type: 'error', content: t('emailAlreadyRegistered') });
-        } else {
-          throw error;
-        }
+        throw error;
       } else if (userData) {
         setMessage({ type: 'success', content: t('registrationSuccessful') });
         setTimeout(() => navigate('/sign-in'), 2000);

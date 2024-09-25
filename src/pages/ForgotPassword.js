@@ -23,9 +23,10 @@ import { DarkMode, LightMode, Language, Email } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import Footer from '../components/Footer';
 import LoadingPage from '../components/LoadingPage';
+import { createClient } from '@supabase/supabase-js';
 
-// Importar la fuente Inter
-import '@fontsource/inter';
+// Inicializar el cliente de Supabase
+const supabase = createClient(process.env.REACT_APP_SUPABASE_URL, process.env.REACT_APP_SUPABASE_ANON_KEY);
 
 const AnimatedLogo = () => (
   <Box
@@ -91,6 +92,7 @@ const ForgotPassword = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState({ type: '', content: '' });
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language');
@@ -99,10 +101,26 @@ const ForgotPassword = () => {
     }
   }, [i18n]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Solicitud de restablecimiento de contraseña para:', email);
-    // Aquí iría la lógica para enviar la solicitud de restablecimiento de contraseña
+    setIsLoading(true);
+    setMessage({ type: '', content: '' });
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      setMessage({ type: 'success', content: t('resetLinkSent') });
+    } catch (error) {
+      console.error('Error al enviar el enlace de restablecimiento:', error.message);
+      setMessage({ type: 'error', content: t('resetLinkError') });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const toggleColorMode = () => {
@@ -269,6 +287,12 @@ const ForgotPassword = () => {
         <Footer />
         
         {isLoading && <LoadingPage />}
+        
+        {message.content && (
+          <Alert severity={message.type} sx={{ mt: 2, width: '100%' }}>
+            {message.content}
+          </Alert>
+        )}
       </Box>
     </ThemeProvider>
   );

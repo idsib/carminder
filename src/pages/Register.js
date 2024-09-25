@@ -99,20 +99,31 @@ const Register = () => {
     setIsLoading(true);
     setMessage({ type: '', content: '' });
     try {
-      const { data: userData, error } = await supabase.auth.signUp({
+      // Registrar al usuario con Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
           data: {
-            first_name: data.firstName,
-            last_name: data.lastName,
+            full_name: `${data.firstName} ${data.lastName}`,
           }
         }
       });
 
-      if (error) {
-        throw error;
-      } else if (userData) {
+      if (authError) throw authError;
+
+      if (authData.user) {
+        // Insertar datos adicionales en la tabla profiles
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert({
+            id: authData.user.id,
+            full_name: `${data.firstName} ${data.lastName}`,
+            username: data.email.split('@')[0], // Crear un username basado en el email
+          });
+
+        if (profileError) throw profileError;
+
         setMessage({ type: 'success', content: t('registrationSuccessful') });
         setTimeout(() => navigate('/sign-in'), 2000);
       }

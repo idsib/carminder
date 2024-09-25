@@ -187,6 +187,16 @@ export default function Dashboard() {
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      navigate('/sign-in');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error.message);
+    }
+  };
+
   return (
     <ThemeProvider theme={customTheme}>
       <Box sx={{ 
@@ -354,7 +364,7 @@ export default function Dashboard() {
             <ListItemText primary={t('Ajustes')} />
           </MenuItem>
           <Divider />
-          <MenuItem onClick={() => { handleCloseUserMenu(); /* Implementar lógica de cierre de sesión */ }}>
+          <MenuItem onClick={() => { handleCloseUserMenu(); handleLogout(); }}>
             <ListItemIcon>
               <Logout fontSize="small" />
             </ListItemIcon>
